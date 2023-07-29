@@ -26,7 +26,7 @@ var users = (localStorage.getItem('todousers')) ? JSON.parse(localStorage.getIte
 
 
 // Check which page is loaded.
-if (currentPage == 'index.html') {
+if (currentPage == 'index.html' || currentPage == '') {
     // Login Page
     if (checkUserLoggedIn()) {
         location.replace('home.html');

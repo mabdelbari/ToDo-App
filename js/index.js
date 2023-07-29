@@ -104,18 +104,23 @@ function login() {
     if (checkLoginEmpty()) {
         showErrorMessage("All fields are required.");
     } else {
-        var accountIndex = checkEmailExists(userEmailInputLogin);
+        if (validateFields(userEmailInputLogin,userEmailRegex)) {
+            var accountIndex = checkEmailExists(userEmailInputLogin);
 
-        if (accountIndex) {
-            if (users[accountIndex - 1].userPass == userPassInputLogin.value) {
-                sessionStorage.setItem('userName', users[accountIndex - 1].userName);
-                location.replace('home.html');
+            if (accountIndex) {
+                if (users[accountIndex - 1].userPass == userPassInputLogin.value) {
+                    sessionStorage.setItem('userName', users[accountIndex - 1].userName);
+                    location.replace('home.html');
+                } else {
+                    showErrorMessage("Incorrect password");
+                }
             } else {
-                showErrorMessage("Incorrect password");
+                showErrorMessage("Email doesn't exist");
             }
-        } else {
-            showErrorMessage("Email doesn't exist");
+        }else{
+            showErrorMessage("Your Email is not valid");
         }
+
     }
 }
 

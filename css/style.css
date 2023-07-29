@@ -1,0 +1,74 @@
+:root {
+    --bg-color: #001C30;
+    --bg-secondary-color: #176B87;
+    --primary-color: #64CCC5;
+    --secondary-color: #DAFFFB;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--secondary-color);
+}
+
+.btn-outline-form {
+    --bs-btn-color: #64CCC5;
+    --bs-btn-border-color: #64CCC5;
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: #64CCC5;
+    --bs-btn-hover-border-color: #64CCC5;
+    --bs-btn-focus-shadow-rgb: 13, 202, 240;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: #64CCC5;
+    --bs-btn-active-border-color: #64CCC5;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #64CCC5;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #64CCC5;
+}
+
+.user-form {
+    background-color: var(--bg-secondary-color);
+    width: 600px !important;
+}
+
+.user-form::before {
+    content: '';
+    position: absolute;
+    background-image: url(../todo.png);
+    width: 80px;
+    height: 80px;
+    background-repeat: no-repeat;
+    background-size: 150% 150%;
+    background-position: center;
+    border-radius: 50%;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-form a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.user-form a:hover {
+    text-decoration: underline;
+}
+
+header h1 {
+    font-family: 'Lobster', cursive;
+    font-size: 3.5rem;
+}
+
+header h1 span {
+    font-family: 'Segoe UI', sans-serif;
+}

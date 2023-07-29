@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+
+    <!-- Google Fonts -->
+
+    <!-- Bootstrap Framework -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- FontAwesome Library -->
+    <link rel="stylesheet" href="css/all.min.css">
+    <!-- Main StyleSheets -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+        <div class="user-form p-5 shadow rounded-3 position-relative">
+            <div class="d-flex flex-column">
+                <h3 class="text-center">Sign Up to ToDo</h3>
+
+                <div class="inputs my-4">
+                    <p id="errorMessage"
+                        class="text-danger d-none column-gap-1 border border-1 border-danger bg-white p-2 rounded">
+                    </p>
+                    <input id="userName" type="text" class="form-control my-3" placeholder="Enter your Name">
+                    <input id="userEmailSign" type="text" class="form-control my-3" placeholder="Enter your E-mail">
+                    <input id="userPassSign" type="password" class="form-control my-3"
+                        placeholder="Enter your Password">
+                </div>
+
+                <button id="signUpBtn" class="btn btn-outline-form">Sign Up</button>
+
+                <p class="text-center mt-3">You have an account? <a href="index.html">Sign In</a> </p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

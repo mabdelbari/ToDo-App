@@ -1,28 +1,35 @@
+// Signup page fields and signup button
 var userNameInputSign = document.querySelector('#userName');
 var userEmailInputSign = document.querySelector('#userEmailSign');
 var userPassInputSign = document.querySelector('#userPassSign');
-
+var signUpBtn = document.querySelector('#signUpBtn');
+// Login page fields and login button
 var userEmailInputLogin = document.querySelector('#userEmailLogin');
 var userPassInputLogin = document.querySelector('#userPassLogin');
-
-var errorMessage = document.querySelector('#errorMessage');
-
 var loginBtn = document.querySelector('#loginBtn');
-var signUpBtn = document.querySelector('#signUpBtn');
+// Error Message if field's value is not valid
+var errorMessageIcon = `<span class=""><i class="fa-solid fa-circle-exclamation fs-5 align-text-bottom"></i></span> `;
+var errorMessage = document.querySelector('#errorMessage');
+// home page fields and buttons
+var todoInput = document.querySelector('#todoField');
 var logoutBtn = document.querySelector('#logoutBtn');
+var submitBtn = document.querySelector('#submitBtn');
+var searchInput = document.querySelector('#searchInput');
+var todoContainer = document.querySelector('#todoContainer');
+
+var todoIndex;
+
 
 var userNameRegex = /^[a-z]{2}([a-z\s]*[a-z]{2})?$/i;
 var userEmailRegex = /^[\w\-\.]+@(\w+\-?\w+\.){1,3}[\w-]{2,4}$/i;
 // Password must contain at least two uppercase, two lowercase, two digits, two special characters and with no whitespaces
 var userPassRegex = /^(?=(?:.*?[0-9]){2})(?=(?:.*?[a-z]){2})(?=(?:.*?[A-Z]){2})(?=(?:.*?[^a-zA-Z0-9]){2})(?!.*\s).{8,30}$/;
 
+// To get the current page url
 var currentPage = location.href.substring(location.href.lastIndexOf('/') + 1);
-
-var errorMessageIcon = `<span class=""><i class="fa-solid fa-circle-exclamation fs-5 align-text-bottom"></i></span> `;
 
 // Check localstorage for existing users.
 var users = (localStorage.getItem('todousers')) ? JSON.parse(localStorage.getItem('todousers')) : [];
-
 
 
 // Check which page is loaded.
@@ -56,13 +63,107 @@ if (currentPage == 'index.html' || currentPage == '') {
         })
     }
 } else if (currentPage == 'home.html') {
+    // Home Page
     if (checkUserLoggedIn()) {
-        document.querySelector('#msgContainer').innerHTML = sessionStorage.getItem('userName');
-        logoutBtn.addEventListener('click', logout)
+        if (localStorage.getItem("todousers") != null) {
+            var loggedUserIndex = sessionStorage.getItem('userIndex');
+            displayToDos(loggedUserIndex);
+            document.querySelector('#userName').innerHTML = users[loggedUserIndex].userName;
+            logoutBtn.addEventListener('click', logout);
+            submitBtn.addEventListener('click', submitToDo);
+            searchInput.addEventListener('input', searchToDo);
+        }
+
+        todoInput.addEventListener('input', function () {
+            errorMessage.classList.replace('d-flex', 'd-none');
+        })
+
     } else {
         location.replace('index.html');
     }
 }
+
+function submitToDo() {
+    if (todoInput.value) {
+        if (submitBtn.innerHTML == "Submit") {
+            addTodo(todoInput.value);
+        } else {
+            updateTodo(todoInput.value);
+        }
+
+        localStorage.setItem('todousers', JSON.stringify(users));
+        displayToDos(loggedUserIndex);
+        todoInput.value = '';
+
+    } else {
+        showErrorMessage("You need to fill up the field with an activity to do..")
+    }
+}
+
+function addTodo(newToDo) {
+    users[loggedUserIndex].todoList.push(newToDo);
+}
+
+function deleteToDo(index) {
+    users[loggedUserIndex].todoList.splice(index, 1);
+    localStorage.setItem('todousers', JSON.stringify(users));
+    displayToDos(loggedUserIndex);
+}
+
+function updateTodo(newToDO) {
+    users[loggedUserIndex].todoList.splice(todoIndex, 1, newToDO);
+    submitBtn.innerHTML = "Submit";
+}
+
+function editToDo(index) {
+    todoIndex = index;
+    todoInput.value = users[loggedUserIndex].todoList[todoIndex];
+    submitBtn.innerHTML = "Update";
+}
+
+function searchToDo() {
+    var todoContainerContent = ``;
+
+    for (let i = 0; i < users[loggedUserIndex].todoList.length; i++) {
+        if (users[loggedUserIndex].todoList[i].toLowerCase().startsWith(searchInput.value.toLowerCase())) {
+            todoContainerContent += `
+            <div
+                class="bg-white text-black d-flex justify-content-between align-items-center py-2 px-3 border border-1 rounded">
+                <p class="m-0">${users[loggedUserIndex].todoList[i]}</p>
+                <div class="d-flex column-gap-3">
+                    <button onclick="deleteToDo(${i})" class="bg-transparent border-0 text-danger fs-4"><i
+                            class="fa-solid fa-trash-can"></i></button>
+                    <button onclick="editToDo(${i})" class="bg-transparent border-0 text-success fs-4"><i
+                            class="fa-solid fa-pen-to-square"></i></button>
+                </div>
+            </div>
+            `
+        }
+    }
+    todoContainer.innerHTML = todoContainerContent;
+}
+
+function displayToDos(userIndex) {
+    var todoContainerContent = ``;
+
+    for (let i = 0; i < users[userIndex].todoList.length; i++) {
+        todoContainerContent += `
+        <div
+            class="bg-white text-black d-flex justify-content-between align-items-center py-2 px-3 border border-1 rounded">
+            <p class="m-0">${users[loggedUserIndex].todoList[i]}</p>
+            <div class="d-flex column-gap-3">
+                <button onclick="deleteToDo(${i})" class="bg-transparent border-0 text-danger fs-4"><i
+                        class="fa-solid fa-trash-can"></i></button>
+                <button onclick="editToDo(${i})" class="bg-transparent border-0 text-success fs-4"><i
+                        class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+        </div>
+        `
+    }
+    todoContainer.innerHTML = todoContainerContent;
+}
+
+
 
 function signUp() {
     if (checkSignUpEmpty()) {
@@ -93,7 +194,8 @@ function addAccount() {
     var user = {
         userName: userNameInputSign.value,
         userEmail: userEmailInputSign.value,
-        userPass: userPassInputSign.value
+        userPass: userPassInputSign.value,
+        todoList: []
     }
     users.push(user);
     localStorage.setItem('todousers', JSON.stringify(users));
@@ -104,12 +206,12 @@ function login() {
     if (checkLoginEmpty()) {
         showErrorMessage("All fields are required.");
     } else {
-        if (validateFields(userEmailInputLogin,userEmailRegex)) {
+        if (validateFields(userEmailInputLogin, userEmailRegex)) {
             var accountIndex = checkEmailExists(userEmailInputLogin);
 
             if (accountIndex) {
                 if (users[accountIndex - 1].userPass == userPassInputLogin.value) {
-                    sessionStorage.setItem('userName', users[accountIndex - 1].userName);
+                    sessionStorage.setItem('userIndex', accountIndex - 1);
                     location.replace('home.html');
                 } else {
                     showErrorMessage("Incorrect password");
@@ -117,7 +219,7 @@ function login() {
             } else {
                 showErrorMessage("Email doesn't exist");
             }
-        }else{
+        } else {
             showErrorMessage("Your Email is not valid");
         }
 
@@ -125,12 +227,12 @@ function login() {
 }
 
 function logout() {
-    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userIndex');
     location.replace('index.html');
 }
 
 function checkUserLoggedIn() {
-    if (sessionStorage.getItem('userName') != null) {
+    if (sessionStorage.getItem('userIndex') != null) {
         return true;
     }
 }

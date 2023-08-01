@@ -68,7 +68,7 @@ if (currentPage == 'index.html' || currentPage == '') {
         if (localStorage.getItem("todousers") != null) {
             var loggedUserIndex = sessionStorage.getItem('userIndex');
             displayToDos(loggedUserIndex);
-            document.querySelector('#userName').innerHTML = users[loggedUserIndex].userName;
+            document.querySelector('#loggedUserName').innerHTML = users[loggedUserIndex].userName;
             logoutBtn.addEventListener('click', logout);
             submitBtn.addEventListener('click', submitToDo);
             searchInput.addEventListener('input', searchToDo);

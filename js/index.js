@@ -22,7 +22,8 @@ var editBtns;
 var todoIndex;
 
 //Regex for Validation
-var userNameRegex = /^[a-z]{2,}(\s?[a-z]{2,})*$/i;
+// var userNameRegex = /^[a-z]{2,}(\s?[a-z]{2,})*$/i;  ----> Same as below
+var userNameRegex = /^[a-z]{2,}(?:\s[a-z]{2,})*$/i; 
 var userEmailRegex = /^[\w\-\.]+@(\w+\-?\w+\.){1,3}[\w-]{2,4}$/i;
 // Password must contain at least two uppercase, two lowercase, two digits, two special characters and with no whitespaces
 var userPassRegex = /^(?=(?:.*?[0-9]){2})(?=(?:.*?[a-z]){2})(?=(?:.*?[A-Z]){2})(?=(?:.*?[^a-zA-Z0-9]){2})(?!.*\s).{8,30}$/;

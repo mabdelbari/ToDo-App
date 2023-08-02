@@ -16,10 +16,12 @@ var logoutBtn = document.querySelector('#logoutBtn');
 var submitBtn = document.querySelector('#submitBtn');
 var searchInput = document.querySelector('#searchInput');
 var todoContainer = document.querySelector('#todoContainer');
+var deleteBtns;
+var editBtns;
 
 var todoIndex;
 
-
+//Regex for Validation
 var userNameRegex = /^[a-z]{2}([a-z\s]*[a-z]{2})?$/i;
 var userEmailRegex = /^[\w\-\.]+@(\w+\-?\w+\.){1,3}[\w-]{2,4}$/i;
 // Password must contain at least two uppercase, two lowercase, two digits, two special characters and with no whitespaces
@@ -30,7 +32,6 @@ var currentPage = location.href.substring(location.href.lastIndexOf('/') + 1);
 
 // Check localstorage for existing users.
 var users = (localStorage.getItem('todousers')) ? JSON.parse(localStorage.getItem('todousers')) : [];
-
 
 // Check which page is loaded.
 if (currentPage == 'index.html' || currentPage == '') {
@@ -64,15 +65,13 @@ if (currentPage == 'index.html' || currentPage == '') {
     }
 } else if (currentPage == 'home.html') {
     // Home Page
-    if (checkUserLoggedIn()) {
-        if (localStorage.getItem("todousers") != null) {
-            var loggedUserIndex = sessionStorage.getItem('userIndex');
-            displayToDos(loggedUserIndex);
-            document.querySelector('#loggedUserName').innerHTML = users[loggedUserIndex].userName;
-            logoutBtn.addEventListener('click', logout);
-            submitBtn.addEventListener('click', submitToDo);
-            searchInput.addEventListener('input', searchToDo);
-        }
+    if (checkUserLoggedIn() && localStorage.getItem("todousers") != null) {
+        var loggedUserIndex = sessionStorage.getItem('userIndex');
+        displayToDos(loggedUserIndex);
+        document.querySelector('#loggedUserName').innerHTML = users[loggedUserIndex].userName;
+        logoutBtn.addEventListener('click', logout);
+        submitBtn.addEventListener('click', submitToDo);
+        searchInput.addEventListener('input', searchToDo);
 
         todoInput.addEventListener('input', function () {
             errorMessage.classList.replace('d-flex', 'd-none');
@@ -131,16 +130,28 @@ function searchToDo() {
                 class="bg-white text-black d-flex justify-content-between align-items-center py-2 px-3 border border-1 rounded">
                 <p class="m-0">${users[loggedUserIndex].todoList[i]}</p>
                 <div class="d-flex column-gap-3">
-                    <button onclick="deleteToDo(${i})" class="bg-transparent border-0 text-danger fs-4"><i
-                            class="fa-solid fa-trash-can"></i></button>
-                    <button onclick="editToDo(${i})" class="bg-transparent border-0 text-success fs-4"><i
-                            class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="bg-transparent border-0 text-danger fs-4" data-delete-target-index="${i}"><i
+                        class="fa-solid fa-trash-can"></i></button>
+                    <button class="bg-transparent border-0 text-success fs-4" data-edit-target-index="${i}"><i
+                        class="fa-solid fa-pen-to-square"></i></button>
                 </div>
             </div>
             `
         }
     }
     todoContainer.innerHTML = todoContainerContent;
+
+    deleteBtns = Array.from(document.querySelectorAll('#todoContainer button[data-delete-target-index]'));
+    editBtns = Array.from(document.querySelectorAll('#todoContainer button[data-edit-target-index]'));
+    for (let i = 0; i < deleteBtns.length && i < editBtns.length; i++) {
+        deleteBtns[i].addEventListener('click', function () {
+            deleteToDo(this.getAttribute('data-delete-target-index'));
+        })
+
+        editBtns[i].addEventListener('click', function () {
+            editToDo(this.getAttribute('data-edit-target-index'));
+        })
+    }
 }
 
 function displayToDos(userIndex) {
@@ -152,15 +163,27 @@ function displayToDos(userIndex) {
             class="bg-white text-black d-flex justify-content-between align-items-center py-2 px-3 border border-1 rounded">
             <p class="m-0">${users[loggedUserIndex].todoList[i]}</p>
             <div class="d-flex column-gap-3">
-                <button onclick="deleteToDo(${i})" class="bg-transparent border-0 text-danger fs-4"><i
+                    <button class="bg-transparent border-0 text-danger fs-4" data-delete-target-index="${i}"><i
                         class="fa-solid fa-trash-can"></i></button>
-                <button onclick="editToDo(${i})" class="bg-transparent border-0 text-success fs-4"><i
+                    <button class="bg-transparent border-0 text-success fs-4" data-edit-target-index="${i}"><i
                         class="fa-solid fa-pen-to-square"></i></button>
             </div>
         </div>
         `
     }
     todoContainer.innerHTML = todoContainerContent;
+
+    deleteBtns = Array.from(document.querySelectorAll('#todoContainer button[data-delete-target-index]'));
+    editBtns = Array.from(document.querySelectorAll('#todoContainer button[data-edit-target-index]'));
+    for (let i = 0; i < deleteBtns.length && i < editBtns.length; i++) {
+        deleteBtns[i].addEventListener('click', function () {
+            deleteToDo(this.getAttribute('data-delete-target-index'));
+        })
+
+        editBtns[i].addEventListener('click', function () {
+            editToDo(this.getAttribute('data-edit-target-index'));
+        })
+    }
 }
 
 
